@@ -1,0 +1,19 @@
+{
+  "name": "mixin-support",
+  "version": "1.0.1",
+  "main": "src/index.js",
+  "description": "Library for JavaScript mixin support, provides an easy and useful interface for the implementation of this powerful concept.",
+  "author": {
+    "name": "devjuanda",
+    "email": "penalozahernandezjuandavid03@gmail.com",
+    "url": "https://www.youtube.com/@codeend_01"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mixins",
+    "JavaScript",
+    "Node.js",
+    "Clean Code", 
+    "Segregation"
+  ]
+}
