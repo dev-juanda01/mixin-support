@@ -10,14 +10,13 @@
 
 To install the library, you can use npm:
 
-```
+```bash
 npm install mixin-support
-
 ```
 
 Or if you are using yarn:
 
-```
+```bash
 yarn add mixin-support
 ```
 
@@ -30,7 +29,7 @@ The core of the library is the `MixinBuilder` class, which provides a static met
 
 Here's a basic example demonstrating how to use `mixin-support`:
 
-```
+```js
 import { MixinBuilder } from 'mixin-support';
 
 // Define some mixins
@@ -69,7 +68,7 @@ instance.describe();   // Output: This is MixinB
 
 For more advanced usage, you can include mixins that add static methods or properties to the final class:
 
-```
+```js
 class StaticMixin {
     static staticMethod() {
         console.log('This is a static method');
