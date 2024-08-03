@@ -1,6 +1,6 @@
 {
   "name": "mixin-support",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "src/index.js",
   "description": "Library for JavaScript mixin support, provides an easy and useful interface for the implementation of this powerful concept.",
   "author": {
@@ -15,5 +15,10 @@
     "Node.js",
     "Clean Code", 
     "Segregation"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dev-juanda01/mixin-support"
+  },
+  "homepage": "https://github.com/dev-juanda01/mixin-support"
 }
