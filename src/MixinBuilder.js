@@ -8,45 +8,56 @@ class MixinBuilder {
      * @returns returns the final class that will inherit in the final context
      */
     static with(...mixins) {
-        return mixins.reduce((object, mixin) => {
-            // Check if mixin is a class
-            if (typeof mixin === "function" && /^class\s/.test(Function.prototype.toString.call(mixin))) {
-
-                const classMixin = class extends object {
-
+        return mixins.reduce((BaseClass, mixin) => {
+            if (
+                typeof mixin === "function" &&
+                /^class\s/.test(Function.prototype.toString.call(mixin))
+            ) {
+                // create an intermediate class that extends the BaseClass and applies the mixin
+                const MixedClass = class extends BaseClass {
                     constructor(...args) {
-
                         super(...args);
-                        const instance = new mixin(...args);
+                        const mixinInstance = new mixin(...args);
 
-                        Object.getOwnPropertyNames(instance).forEach((name) => {
-                            this[name] = instance[name];
-                        });
-
-                        Object.getOwnPropertyNames(mixin.prototype).forEach((name) => {
-                            if (name !== "constructor") {
-                                this[name] = instance[name].bind(instance);
+                        // copies properties and instance methods of the mixin
+                        Object.getOwnPropertyNames(mixinInstance).forEach(
+                            (name) => {
+                                if (!this.hasOwnProperty(name)) {
+                                    this[name] = mixinInstance[name];
+                                }
                             }
-                        });
+                        );
                     }
                 };
 
-                // Add static members from mixin class to the resulting class
+                // add static members from mixin class to the resulting class
                 Object.getOwnPropertyNames(mixin).forEach((name) => {
                     if (
                         name !== "prototype" &&
                         name !== "length" &&
                         name !== "name"
                     ) {
-                        classMixin[name] = mixin[name];
+                        MixedClass[name] = mixin[name];
                     }
                 });
 
-                return classMixin;
+                // add the mixin prototype to the MixedClass prototype chain
+                Object.setPrototypeOf(
+                    MixedClass.prototype,
+                    new Proxy(mixin.prototype, {
+                        get(target, prop, receiver) {
+                            return (
+                                Reflect.get(target, prop, receiver) ||
+                                Reflect.get(BaseClass.prototype, prop, receiver)
+                            );
+                        },
+                    })
+                );
+
+                return MixedClass;
             }
 
-            // Assume mixin is a function that returns a class
-            return mixin(object);
+            return mixin(BaseClass);
         }, class {});
     }
 }
