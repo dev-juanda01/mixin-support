@@ -1,6 +1,6 @@
 {
   "name": "mixin-support",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "src/index.js",
   "description": "Library for JavaScript mixin support, provides an easy and useful interface for the implementation of this powerful concept.",
   "author": {
