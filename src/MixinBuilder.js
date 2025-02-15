@@ -1,3 +1,8 @@
+import {
+    InstantiatedAbstractClassException,
+    AbstractMethodNotImplementedException,
+} from "./exceptions/index.js";
+
 /**
  * This class is responsible for building the final prototype from a group of mixins
  */
@@ -59,6 +64,44 @@ class MixinBuilder {
 
             return mixin(BaseClass);
         }, class {});
+    }
+
+    /**
+     * Ensures that the derived class implements all the specified abstract methods.
+     * Throws an error if an attempt is made to instantiate the abstract class directly,
+     * or if any of the abstract methods are not implemented in the derived class.
+     *
+     * @param {string[]} abstractMethods - An array of method names that must be implemented by the derived class.
+     * @throws {InstantiatedAbstractClassException} If an attempt is made to instantiate the abstract class directly.
+     * @throws {AbstractMethodNotImplementedException} If any of the abstract methods are not implemented in the derived class.
+     */
+    static abstract() {
+        return class AbstractBase {
+            constructor() {
+                // Evita la instanciación directa de clases que usen `MixinBuilder.abstract()`
+                if (new.target.__proto__.name === AbstractBase.name) {
+                    throw new InstantiatedAbstractClassException(
+                        `Cannot instantiate abstract class: ${this.constructor.name}`
+                    );
+                }
+
+                const prototypeMethods = Object.getOwnPropertyNames(
+                    new.target.prototype
+                ).filter((prop) => prop !== "constructor");
+
+                Object.getOwnPropertyNames(new.target.__proto__.prototype)
+                    .filter((prop) => prop !== "constructor")
+                    .forEach((name) => {
+                        if (!prototypeMethods.includes(name)) {
+                            throw new AbstractMethodNotImplementedException(
+                                `Class "${
+                                    new.target.__proto__.name
+                                }" must implement: ${name} method`
+                            );
+                        }
+                    });
+            }
+        };
     }
 }
 export { MixinBuilder };
